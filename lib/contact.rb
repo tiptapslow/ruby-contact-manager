@@ -18,6 +18,6 @@ class Contact
   end
 end
 
-# Example usage:
-contact = Contact.new('John Doe', 'johndoe@example.com', '123-456-7890')
-puts contact
+# # Example usage:
+# contact = Contact.new('John Doe', 'johndoe@example.com', '123-456-7890')
+# puts contact
