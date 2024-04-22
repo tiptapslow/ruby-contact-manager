@@ -1,0 +1,105 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require_relative '../lib/contact'
+require_relative '../lib/contact_list'
+
+def display_menu
+  puts 'What would you like to do?'
+  puts '1. Add a new contact'
+  puts '2. Delete a contact'
+  puts '3. Find a contact'
+  puts '4. List all contacts'
+  puts '5. Search contacts'
+  puts '6. Exit'
+end
+
+def add_initial_contacts(contact_list)
+  contact1 = Contact.new('John Doe', 'john@example.com', '123-456-7890')
+  contact2 = Contact.new('Jane Smith', 'jane@example.com', '987-654-3210')
+  contact3 = Contact.new('Bob Johnson', 'bob@example.com', '456-789-0123')
+  contact_list.add_contact(contact1)
+  contact_list.add_contact(contact2)
+  contact_list.add_contact(contact3)
+end
+
+def handle_choice(choice, contact_list)
+  case choice
+  when '1' then handle_add_contact(contact_list)
+  when '2' then handle_delete_contact(contact_list)
+  when '3' then handle_find_contact(contact_list)
+  when '4' then list_all_contacts(contact_list)
+  when '5' then search_contacts(contact_list)
+  when '6' then puts 'Goodbye!'
+  else puts 'Invalid choice. Please try again.'
+  end
+end
+
+def run_contact_manager
+  contact_list = ContactList.new
+  add_initial_contacts(contact_list)
+
+  loop do
+    display_menu
+    choice = gets.chomp
+    handle_choice(choice, contact_list)
+    break if choice == '6'
+
+    puts
+  end
+end
+
+def add_contact(contact_list)
+  print 'Enter name: '
+  name = gets.chomp
+  print 'Enter email: '
+  email = gets.chomp
+  print 'Enter phone number: '
+  phone = gets.chomp
+  contact = Contact.new(name, email, phone)
+  contact_list.add_contact(contact)
+  puts "Contact #{name} added successfully."
+end
+
+def delete_contact(contact_list)
+  print 'Enter name of contact to delete: '
+  name = gets.chomp
+  contact = contact_list.find_contact(name)
+  if contact
+    contact_list.delete_contact(contact)
+    puts "Contact #{name} deleted successfully."
+  else
+    puts "Contact #{name} not found."
+  end
+end
+
+def find_contact(contact_list)
+  print 'Enter name of contact to find: '
+  name = gets.chomp
+  contact = contact_list.find_contact(name)
+  puts contact || "Contact #{name} not found."
+end
+
+def list_all_contacts(contact_list)
+  names = contact_list.all_contact_names
+  if names.empty?
+    puts 'No contacts found.'
+  else
+    puts 'All contacts:'
+    names.each { |contact_name| puts contact_name }
+  end
+end
+
+def search_contacts(contact_list)
+  print 'Enter search query: '
+  query = gets.chomp
+  contacts = contact_list.search(query)
+  if contacts.empty?
+    puts "No contacts found for query '#{query}'."
+  else
+    puts "Contacts found for query '#{query}':"
+    contacts.each { |c| puts c }
+  end
+end
+
+run_contact_manager
